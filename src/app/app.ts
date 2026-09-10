@@ -63,6 +63,9 @@ export class App implements OnInit, OnDestroy {
   }
 
   salir(): void {
-    this.msal.logoutRedirect();
+    // Hay que decirle a Microsoft que cuenta cerrar. Sin la cuenta activa no lo
+    // asume y muestra la pantalla "Pick an account", de modo que la sesion
+    // parece no cerrarse nunca aunque MSAL ya haya limpiado su cache local.
+    this.msal.logoutRedirect({ account: this.msal.instance.getActiveAccount() });
   }
 }
