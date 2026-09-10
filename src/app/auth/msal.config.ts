@@ -78,11 +78,17 @@ export function configuracionDelInterceptor(): MsalInterceptorConfiguration {
   const mapa = new Map<string, Array<string>>();
   const api = environment.apiBase;
 
+  // La coincidencia es exacta, no por prefijo: sin la entrada con comodin,
+  // /v1/productos/quien-soy y /v1/productos/{id} viajarian sin token y el
+  // gateway los rechazaria con 401.
   mapa.set(`${api}/v1/productos`, [SCOPES.productosLeer]);
+  mapa.set(`${api}/v1/productos/*`, [SCOPES.productosLeer]);
   mapa.set(`${api}/v1/pedidos`, [SCOPES.pedidosEscribir]);
+  mapa.set(`${api}/v1/pedidos/*`, [SCOPES.pedidosEscribir]);
 
   // El endpoint publico y el registro de usuarios son deliberadamente anonimos:
   // no aparecen en el mapa, asi que el interceptor los deja pasar sin token.
+  // Por eso los comodines se declaran por recurso y no como /v1/*.
 
   return {
     interactionType: InteractionType.Redirect,
