@@ -24,6 +24,13 @@ server {
         if ($origen_valido = 0) {
             return 403 '{"error":"Esta aplicacion solo se sirve a traves del API Gateway"}';
         }
+        # index.html nunca se cachea: es el que nombra el bundle vigente. Sin
+        # esta cabecera el navegador aplica caducidad heuristica y puede seguir
+        # sirviendo la version anterior durante horas despues de un despliegue.
+        # Los bundles si se cachean, porque su nombre lleva un hash del
+        # contenido y cambia en cada compilacion.
+        add_header Cache-Control "no-cache, must-revalidate";
+
         # Angular resuelve el enrutado en el navegador: cualquier ruta
         # desconocida devuelve index.html en lugar de 404, o recargar /catalogo
         # romperia la aplicacion.
