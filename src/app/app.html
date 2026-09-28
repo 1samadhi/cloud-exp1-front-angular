@@ -9,12 +9,15 @@
   </nav>
 
   <div class="sesion">
-    @if (cuenta(); as c) {
-      <span class="usuario">{{ c.name || c.username }}</span>
+    @if (nombreUsuario; as nombre) {
+      <span class="usuario">{{ nombre }}</span>
       <button class="secundario" (click)="salir()">Cerrar sesion</button>
     } @else {
       <a routerLink="/registro" class="enlace-registro">Crear cuenta</a>
       <button (click)="entrar()">Iniciar sesion con Microsoft</button>
+      @if (cognito.disponible) {
+        <button class="secundario" (click)="entrarConCognito()">Acceso externo (correo)</button>
+      }
     }
   </div>
 </header>

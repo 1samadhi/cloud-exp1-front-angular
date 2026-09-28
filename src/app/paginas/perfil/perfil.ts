@@ -1,6 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { MsalService } from '@azure/msal-angular';
+import { CognitoService } from '../../auth/cognito.service';
 import { Api } from '../../servicios/api';
 import { SCOPES } from '../../auth/msal.config';
 
@@ -12,6 +13,7 @@ import { SCOPES } from '../../auth/msal.config';
 export class Perfil implements OnInit {
   private msal = inject(MsalService);
   private api = inject(Api);
+  private cognito = inject(CognitoService);
 
   readonly claimsIdToken = signal<Record<string, unknown> | null>(null);
   readonly claimsAccessToken = signal<Record<string, unknown> | null>(null);
@@ -19,6 +21,17 @@ export class Perfil implements OnInit {
   readonly error = signal('');
 
   ngOnInit(): void {
+    if (this.cognito.autenticado) {
+      const u = this.cognito.usuario()!;
+      this.claimsIdToken.set(u.profile as Record<string, unknown>);
+      this.claimsAccessToken.set(this.decodificar(u.access_token));
+      this.api.quienSoy().subscribe({
+        next: (r) => this.vistoPorElBackend.set(r),
+        error: (e) => this.error.set(`El backend respondio HTTP ${e.status}`)
+      });
+      return;
+    }
+
     const cuenta = this.msal.instance.getActiveAccount();
     this.claimsIdToken.set((cuenta?.idTokenClaims as Record<string, unknown>) ?? null);
 

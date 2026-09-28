@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { MsalGuard } from '@azure/msal-angular';
+import { guardSesion } from './auth/guard-sesion';
 
 import { Inicio } from './paginas/inicio/inicio';
 import { Catalogo } from './paginas/catalogo/catalogo';
@@ -15,8 +15,8 @@ import { Registro } from './paginas/registro/registro';
 export const routes: Routes = [
   { path: '', component: Inicio },
   { path: 'registro', component: Registro },
-  { path: 'catalogo', component: Catalogo, canActivate: [MsalGuard] },
-  { path: 'pedidos', component: Pedidos, canActivate: [MsalGuard] },
-  { path: 'perfil', component: Perfil, canActivate: [MsalGuard] },
+  { path: 'catalogo', component: Catalogo, canActivate: [guardSesion] },
+  { path: 'pedidos', component: Pedidos, canActivate: [guardSesion] },
+  { path: 'perfil', component: Perfil, canActivate: [guardSesion] },
   { path: '**', redirectTo: '' }
 ];

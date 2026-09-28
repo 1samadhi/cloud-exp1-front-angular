@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MsalService, MsalBroadcastService, MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
 import { EventMessage, EventType, InteractionStatus, AccountInfo } from '@azure/msal-browser';
+import { CognitoService } from './auth/cognito.service';
 import { Subject, filter, takeUntil, concatMap } from 'rxjs';
 
 @Component({
@@ -14,6 +15,7 @@ export class App implements OnInit, OnDestroy {
   private msal = inject(MsalService);
   private eventos = inject(MsalBroadcastService);
   private configGuard = inject<MsalGuardConfiguration>(MSAL_GUARD_CONFIG);
+  readonly cognito = inject(CognitoService);
   private destruido = new Subject<void>();
 
   readonly cuenta = signal<AccountInfo | null>(null);
@@ -58,11 +60,27 @@ export class App implements OnInit, OnDestroy {
     this.cuenta.set(this.msal.instance.getActiveAccount());
   }
 
+  entrarConCognito(): void {
+    this.cognito.entrar();
+  }
+
+  /** Nombre a mostrar: el de la cuenta de Cognito o el de la de Microsoft. */
+  get nombreUsuario(): string | null {
+    const c = this.cognito.usuario();
+    if (c && !c.expired) return (c.profile['name'] as string) || (c.profile['email'] as string) || 'Usuario';
+    const m = this.cuenta();
+    return m ? m.name || m.username : null;
+  }
+
   entrar(): void {
     this.msal.loginRedirect({ ...this.configGuard.authRequest } as any);
   }
 
   salir(): void {
+    if (this.cognito.autenticado) {
+      this.cognito.salir();
+      return;
+    }
     // Hay que decirle a Microsoft que cuenta cerrar. Sin la cuenta activa no lo
     // asume y muestra la pantalla "Pick an account", de modo que la sesion
     // parece no cerrarse nunca aunque MSAL ya haya limpiado su cache local.
