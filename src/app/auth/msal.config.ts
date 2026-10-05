@@ -83,8 +83,8 @@ export function configuracionDelInterceptor(): MsalInterceptorConfiguration {
   // gateway los rechazaria con 401.
   mapa.set(`${api}/v1/productos`, [SCOPES.productosLeer]);
   mapa.set(`${api}/v1/productos/*`, [SCOPES.productosLeer]);
-  mapa.set(`${api}/v1/pedidos`, [SCOPES.pedidosEscribir]);
-  mapa.set(`${api}/v1/pedidos/*`, [SCOPES.pedidosEscribir]);
+  mapa.set(`${api}/v1/carrito`, [SCOPES.pedidosEscribir]);
+  mapa.set(`${api}/v1/carrito/*`, [SCOPES.pedidosEscribir]);
 
   // El endpoint publico y el registro de usuarios son deliberadamente anonimos:
   // no aparecen en el mapa, asi que el interceptor los deja pasar sin token.

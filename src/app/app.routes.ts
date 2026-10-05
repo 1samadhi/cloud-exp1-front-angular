@@ -3,7 +3,7 @@ import { guardSesion } from './auth/guard-sesion';
 
 import { Inicio } from './paginas/inicio/inicio';
 import { Catalogo } from './paginas/catalogo/catalogo';
-import { Pedidos } from './paginas/pedidos/pedidos';
+import { Carrito } from './paginas/carrito/carrito';
 import { Perfil } from './paginas/perfil/perfil';
 import { Registro } from './paginas/registro/registro';
 
@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: '', component: Inicio },
   { path: 'registro', component: Registro },
   { path: 'catalogo', component: Catalogo, canActivate: [guardSesion] },
-  { path: 'pedidos', component: Pedidos, canActivate: [guardSesion] },
+  { path: 'carrito', component: Carrito, canActivate: [guardSesion] },
   { path: 'perfil', component: Perfil, canActivate: [guardSesion] },
   { path: '**', redirectTo: '' }
 ];

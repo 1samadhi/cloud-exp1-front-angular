@@ -22,12 +22,12 @@ export class Catalogo implements OnInit {
 
   pedir(p: Producto): void {
     this.mensaje.set('');
-    this.api.crearPedido(p.id, 1).subscribe({
-      next: (pedido) => this.mensaje.set(`Pedido ${pedido.id} creado: ${p.nombre}`),
+    this.api.agregarAlCarrito(p.id, 1).subscribe({
+      next: (item) => this.mensaje.set(`Item ${item.id} agregado al carrito: ${p.nombre}`),
       error: (e) => this.error.set(
         e.status === 403
           ? 'Tu token no incluye el permiso pedidos.escribir'
-          : `No se pudo crear el pedido (HTTP ${e.status})`)
+          : `No se pudo agregar al carrito (HTTP ${e.status})`)
     });
   }
 }

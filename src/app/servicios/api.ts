@@ -10,7 +10,7 @@ export interface Producto {
   precio: number;
 }
 
-export interface Pedido {
+export interface ItemCarrito {
   id: number;
   cliente: string;
   productoId: number;
@@ -53,12 +53,12 @@ export class Api {
     return this.http.get<Record<string, unknown>>(`${this.base}/v1/productos/quien-soy`);
   }
 
-  pedidos(): Observable<Pedido[]> {
-    return this.http.get<Pedido[]>(`${this.base}/v1/pedidos`);
+  carrito(): Observable<ItemCarrito[]> {
+    return this.http.get<ItemCarrito[]>(`${this.base}/v1/carrito`);
   }
 
-  crearPedido(productoId: number, cantidad: number): Observable<Pedido> {
-    return this.http.post<Pedido>(`${this.base}/v1/pedidos`, { productoId, cantidad });
+  agregarAlCarrito(productoId: number, cantidad: number): Observable<ItemCarrito> {
+    return this.http.post<ItemCarrito>(`${this.base}/v1/carrito`, { productoId, cantidad });
   }
 
   /** Anonimo a proposito: quien se registra todavia no tiene cuenta. */
