@@ -14,12 +14,11 @@ export const environment = {
     appIdUri: 'api://c483f102-da2d-41b5-b48e-26e7ca78ab98'
   },
   // Amazon Cognito: acceso para usuarios externos (autorregistro con correo).
-  // Los valores PENDIENTE salen de la consola de AWS al crear el grupo de usuarios.
   cognito: {
     region: 'us-east-1',
-    userPoolId: 'us-east-1_wxeYD55lo',      // us-east-1_XXXXXXXXX
-    clientId: 'sc43g201v1873abj18sms16k1',        // Client ID de la app SPA en Cognito
-    dominio: 'https://pedidos360-xeyd55lo.auth.us-east-1.amazoncognito.com',         // https://<prefijo>.auth.us-east-1.amazoncognito.com
+    userPoolId: 'us-east-1_OQ82j9BOi',
+    clientId: '20jn3q3vg0rd2d26jb9gq4dafg',
+    dominio: 'https://pedidos360-oq82j9boi.auth.us-east-1.amazoncognito.com',
     redirectUri: 'http://localhost:4200',
     logoutUri: 'http://localhost:4200'
   },
