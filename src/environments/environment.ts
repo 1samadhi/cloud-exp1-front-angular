@@ -23,5 +23,5 @@ export const environment = {
     redirectUri: 'http://localhost:4200',
     logoutUri: 'http://localhost:4200'
   },
-  apiBase: 'https://0nxb0dg1ub.execute-api.us-east-1.amazonaws.com/desarrollo'
+  apiBase: 'https://8b3fvdvhe6.execute-api.us-east-1.amazonaws.com/desarrollo'
 };
