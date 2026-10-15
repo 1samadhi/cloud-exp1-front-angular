@@ -1,11 +1,24 @@
-# El front ahora se sirve directo desde esta instancia (puerto 80), con su
-# propia URL, separado del API Gateway que solo expone el backend. El
-# navegador hace peticiones cross-origin reales hacia la API, por eso cada
-# microservicio valida CORS de verdad (ver seguridad.origenes-cors).
-
+# El front ahora se sirve directo desde esta instancia, con su propia URL,
+# separado del API Gateway que solo expone el backend. El navegador hace
+# peticiones cross-origin reales hacia la API, por eso cada microservicio
+# valida CORS de verdad (ver seguridad.origenes-cors).
+#
+# HTTPS es obligatorio aqui, no cosmetico: MSAL y oidc-client-ts generan el
+# code_challenge de PKCE con crypto.subtle, que los navegadores desactivan
+# fuera de un contexto seguro (HTTPS o localhost). Sin esto la app ni siquiera
+# arranca. El Lab no tiene permiso para CloudFront/ACM, asi que el certificado
+# es autofirmado: el navegador pide aceptarlo una vez.
 server {
     listen 80;
     server_name _;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name _;
+    ssl_certificate     /etc/nginx/certs/front.crt;
+    ssl_certificate_key /etc/nginx/certs/front.key;
     root /usr/share/nginx/html;
     index index.html;
 
