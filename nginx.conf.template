@@ -1,15 +1,7 @@
-# Plantilla: el contenedor de nginx sustituye las variables de entorno al
-# arrancar (/docker-entrypoint.d/20-envsubst-on-templates.sh) y escribe el
-# resultado en /etc/nginx/conf.d/default.conf.
-#
-# Con SECRETO_GATEWAY definido, solo se acepta la peticion que traiga ese valor
-# en la cabecera. Con SECRETO_GATEWAY vacio la entrada del map pasa a ser la
-# cadena vacia, que es justo lo que envia un cliente sin cabecera, de modo que
-# la comprobacion queda desactivada y la imagen sirve para ejecutar en local.
-map $http_x_origen_gateway $origen_valido {
-    default              0;
-    "${SECRETO_GATEWAY}" 1;
-}
+# El front ahora se sirve directo desde esta instancia (puerto 80), con su
+# propia URL, separado del API Gateway que solo expone el backend. El
+# navegador hace peticiones cross-origin reales hacia la API, por eso cada
+# microservicio valida CORS de verdad (ver seguridad.origenes-cors).
 
 server {
     listen 80;
@@ -18,12 +10,6 @@ server {
     index index.html;
 
     location / {
-        # El API Gateway debe ser el unico punto de entrada. La instancia tiene
-        # IP publica, asi que sin esto el frontend se serviria tambien por el
-        # puerto 80 directo, saltandose el gateway y su autorizador.
-        if ($origen_valido = 0) {
-            return 403 '{"error":"Esta aplicacion solo se sirve a traves del API Gateway"}';
-        }
         # index.html nunca se cachea: es el que nombra el bundle vigente. Sin
         # esta cabecera el navegador aplica caducidad heuristica y puede seguir
         # sirviendo la version anterior durante horas despues de un despliegue.
