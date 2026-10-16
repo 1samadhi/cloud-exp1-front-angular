@@ -7,6 +7,19 @@
 
 @if (error()) { <p class="error">{{ error() }}</p> }
 
+@if (ordenCreada(); as orden) {
+  <section class="tarjeta exito">
+    <h2>Compra confirmada</h2>
+    <p>Orden #{{ orden.id }} registrada por un total de {{ orden.total }} CLP.</p>
+    <p class="nota">
+      Se publico el evento <code>orden.creada</code>: ms-productos ya descuenta el
+      stock, ms-notificaciones simula el correo de confirmacion a
+      <code>{{ orden.correo }}</code> y ms-facturacion genera la boleta, los tres en
+      paralelo (patron publish/subscribe, cada uno con su propia cola y DLQ).
+    </p>
+  </section>
+}
+
 <section class="tarjeta">
   <h2>Agregar item</h2>
   <div class="formulario-linea">
@@ -28,3 +41,14 @@
     }
   </tbody>
 </table>
+
+<section class="tarjeta">
+  <button (click)="confirmarCompra()" [disabled]="confirmando() || items().length === 0">
+    {{ confirmando() ? 'Confirmando...' : 'Confirmar compra' }}
+  </button>
+  <p class="nota">
+    Crea la orden en ms-ordenes con todos los items de arriba. No vacia el
+    carrito (ms-carrito no tiene un endpoint para eso todavia): podes volver a
+    confirmar con los mismos items si queres probar de nuevo.
+  </p>
+</section>

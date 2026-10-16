@@ -18,6 +18,14 @@ export interface ItemCarrito {
   creado: string;
 }
 
+export interface Orden {
+  id: number;
+  cliente: string;
+  correo: string;
+  total: number;
+  creado: string;
+}
+
 export interface NuevoUsuario {
   nombre: string;
   usuario: string;
@@ -59,6 +67,12 @@ export class Api {
 
   agregarAlCarrito(productoId: number, cantidad: number): Observable<ItemCarrito> {
     return this.http.post<ItemCarrito>(`${this.base}/v1/carrito`, { productoId, cantidad });
+  }
+
+  /** Confirma la compra: ms-ordenes registra la orden y publica orden.creada
+   *  (dispara descuento de stock, notificacion y facturacion en paralelo). */
+  crearOrden(items: { productoId: number; cantidad: number }[]): Observable<Orden> {
+    return this.http.post<Orden>(`${this.base}/v1/ordenes`, { items });
   }
 
   /** Anonimo a proposito: quien se registra todavia no tiene cuenta. */
